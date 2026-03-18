@@ -918,14 +918,51 @@ const App = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
-  const [cart, setCart] = useState([]);
-  const [wishlist, setWishlist] = useState([]);
+
+  // Initialize cart and wishlist from localStorage
+  const [cart, setCart] = useState(() => {
+    try {
+      const savedCart = localStorage.getItem('neon-shoe-cart');
+      return savedCart ? JSON.parse(savedCart) : [];
+    } catch (error) {
+      console.error('Error loading cart from localStorage:', error);
+      return [];
+    }
+  });
+
+  const [wishlist, setWishlist] = useState(() => {
+    try {
+      const savedWishlist = localStorage.getItem('neon-shoe-wishlist');
+      return savedWishlist ? JSON.parse(savedWishlist) : [];
+    } catch (error) {
+      console.error('Error loading wishlist from localStorage:', error);
+      return [];
+    }
+  });
   
   const [view, setView] = useState('home'); // 'home', 'shop', 'product', 'about', 'returns', 'shipping', 'privacy'
   const [currentProduct, setCurrentProduct] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false);
+
+  // Persist cart to localStorage whenever it changes
+  useEffect(() => {
+    try {
+      localStorage.setItem('neon-shoe-cart', JSON.stringify(cart));
+    } catch (error) {
+      console.error('Error saving cart to localStorage:', error);
+    }
+  }, [cart]);
+
+  // Persist wishlist to localStorage whenever it changes
+  useEffect(() => {
+    try {
+      localStorage.setItem('neon-shoe-wishlist', JSON.stringify(wishlist));
+    } catch (error) {
+      console.error('Error saving wishlist to localStorage:', error);
+    }
+  }, [wishlist]);
 
   useEffect(() => {
     const handleScroll = () => {
